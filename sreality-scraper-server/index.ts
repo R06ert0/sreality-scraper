@@ -4,7 +4,7 @@ import {getEstates, initDb, insertEstates} from "./database";
 import {scrapeEstateDataList} from "./scraper"
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(
     cors({origin: ['http://localhost:8080', 'http://127.0.0.1:8080']})
@@ -12,9 +12,9 @@ app.use(
 
 app.get('/estates', async (req: any, res: any) => {
     const {pageIndex, pageSize} = req.query;
-    const estates = await getEstates(pageIndex, pageSize);
+    const estatesResponse = await getEstates(pageIndex, pageSize);
     res.status(200);
-    res.send(estates);
+    res.send(estatesResponse);
 })
 
 app.listen(port, () => {

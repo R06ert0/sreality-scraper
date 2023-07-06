@@ -4,7 +4,10 @@ import {EstateData} from "./model/estate-data";
 const url = "https://www.sreality.cz/en/search/for-sale/apartments";
 
 export async function scrapeEstateDataList() {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        headless: "new",
+        args: ["--no-sandbox"]
+    });
     const page = await browser.newPage();
     await page.goto(url);
     // There are 20 items on each page

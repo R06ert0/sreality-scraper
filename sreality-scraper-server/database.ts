@@ -1,16 +1,16 @@
 import {Pool} from "pg";
 import {EstateData} from "./model/estate-data";
+import {EstatesResponse} from "./model/estates-response";
 
 const pool = new Pool({
-    host: "localhost",
-    user: "postgres",
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
     port: 5432,
-    database: "sreality_scraper_db",
+    database: process.env.DB_NAME,
     max: 20,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 2000,
 })
-
 export const initDb = async () => {
     await pool.query(`DROP TABLE IF EXISTS "estates"`)
     await pool.query(`
@@ -31,13 +31,18 @@ export const insertEstates = async (estates: EstateData[]) => {
     console.log("[LOG]: DATA HAS BEEN INSERTED INTO THE DATABASE");
 };
 
-export const getEstates = async (pageIndex?: number, pageSize?: number) => {
-    let baseQuery = `SELECT *
+export const getEstates = async (pageIndex?: number, pageSize?: number): Promise<EstatesResponse> => {
+    let baseQuery = `SELECT *, count(*) OVER () AS total
                      FROM "estates"`;
     if (pageIndex && pageSize) {
         baseQuery += ` LIMIT ${pageSize} OFFSET ${pageIndex * pageSize}`;
     }
     const result = await pool.query(baseQuery);
-    return result.rows;
+    const total = result.rows[0]?.total;
+    const estates = result.rows.map(row => {
+        delete row.total;
+        return row;
+    });
+    return {estates, total};
 };
 

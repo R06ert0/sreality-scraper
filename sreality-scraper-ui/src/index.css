@@ -1,3 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+:root {
+    --font-color: #333333;
+    --bg-light-red: #FFF6F6;
+    --bg-dark-red: #CB0000;
+    --bg-white: #FFFFFF;
+    --card-box-shadow: 0 2px 5px 0 #0000002e, 0 0 2px 0 #0000001f;
+}
+
 body {
-  margin: 0;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    font-family: Roboto, sans-serif;
+    background-color: var(--bg-light-red);
+    color: var(--font-color);
+}
+
+#page-layout {
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    max-width: 1140px;
+    row-gap: 48px;
+}
+
+@media (max-width: 768px) {
+    #page-layout {
+        padding: 48px 0;
+    }
 }

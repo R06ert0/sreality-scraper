@@ -1,7 +1,9 @@
 // Components
 import EstateProvider from "./estate/estate-provider";
+import PageLayout from "./shared/page-layout";
 
 export default function App() {
-    return <EstateProvider>
-    </EstateProvider>
+    return <PageLayout>
+        <EstateProvider/>
+    </PageLayout>
 };

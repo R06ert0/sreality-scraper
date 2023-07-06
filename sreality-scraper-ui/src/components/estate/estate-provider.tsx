@@ -1,60 +1,32 @@
 // Packages
-import {ReactNode, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 // Components
 import {EstatesService} from "../../lib/estates-service";
+import Pagination from "../shared/pagination/pagination";
+import EstateList from "./estate-list";
 // Types
-import {EstatesData} from "../../model/estates-data";
+import {EstateData} from "../../model/estate-data";
 
-type Props = {
-    children?: ReactNode;
-}
-export default function EstateProvider({children}: Props) {
-    const [estates, setEstates] = useState<EstatesData[]>([]);
-    const [page, setPage] = useState<number>(0);
-    const estatesService = new EstatesService();
+export default function EstateProvider() {
+    const [estates, setEstates] = useState<EstateData[]>([]);
+    const [pageIndex, setPageIndex] = useState<number>(0);
+    const [totalPages, setTotalPages] = useState<number>(0);
+    const pageSize = 20;
 
     useEffect(() => {
-        estatesService.loadEstates(page).then(setEstates)
-    }, [page]);
+        const estatesService = new EstatesService();
+        estatesService.loadEstates(pageIndex, pageSize).then(estatesResponse => {
+            setEstates(estatesResponse.estates);
+            setTotalPages(Math.ceil(estatesResponse.total / pageSize));
+        });
+    }, [pageIndex]);
 
-    function prevPage() {
-        setPage(prev => {
-            if (prev <= 0) {
-                return 0;
-            }
-            return prev - 1;
-        })
+    function handlePageIndexChange(pageIndex: number) {
+        setPageIndex(pageIndex);
     }
 
-    function nextPage() {
-        setPage(prev => {
-            return prev + 1;
-        })
-    }
-
-    return <div style={{
-        display: "flex",
-        gap: 16,
-        flexWrap: "wrap"
-    }}>
-        <div style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "space-between"
-        }}>
-            <button onClick={prevPage}>Prev page</button>
-            <button onClick={nextPage}>Next page</button>
-        </div>
-        {children}
-        {
-            estates.map(estate => {
-                return <div key={estate.id} style={{
-                    border: "1px solid black"
-                }}>
-                    <h2>{estate.id + " - " + estate.title}</h2>
-                    <img src={estate.img} alt={estate.title}/>
-                </div>
-            })
-        }
-    </div>;
+    return <>
+        <Pagination pageIndex={pageIndex} totalPages={totalPages} onPageIndexChange={handlePageIndexChange}/>
+        <EstateList estates={estates}/>
+    </>;
 };
