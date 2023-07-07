@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "nodemon index.ts",
+    "serve": "node .",
     "test": "jest",
     "build": "tsc --project ./"
   },

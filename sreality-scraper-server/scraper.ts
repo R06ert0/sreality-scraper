@@ -17,6 +17,7 @@ export async function scrapeEstateDataList() {
         await _changePage(page, pageNumber);
         const estateDataListPerPage: EstateData[] = await _getEstateDataListPerPage(page);
         estateDataList = [...estateDataList, ...estateDataListPerPage];
+        console.log("[LOG]: " + estateDataListPerPage.length + " ITEMS HAVE BEEN SCRAPED FROM PAGE " + pageNumber);
     }
     await browser.close();
     console.log("[LOG]: " + estateDataList.length + " ITEMS HAVE BEEN SCRAPED FROM " + url);

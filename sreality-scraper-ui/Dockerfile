@@ -1,4 +1,4 @@
-FROM --platform=linux/arm64/v8 node:18
+FROM node:18
 
 WORKDIR /app
 
@@ -8,4 +8,7 @@ RUN npm install
 
 COPY . .
 
-CMD ["npm", "start"]
+RUN npm run build
+RUN npm install -g serve
+
+CMD ["npm", "run", "serve"]

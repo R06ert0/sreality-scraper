@@ -1,4 +1,4 @@
-FROM --platform=linux/arm64/v8 node:18
+FROM node:18
 
 WORKDIR /app
 
@@ -21,4 +21,6 @@ ENV DB_NAME="sreality_scraper_db"
 ENV DB_USER="postgres"
 ENV DB_HOST="postgresql"
 
-CMD ["npm", "start"]
+RUN npm run build
+
+CMD ["npm", "run", "serve"]
